@@ -2027,12 +2027,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
-    source: String,
-    snackbar: false
+    source: String
   },
   data: function data() {
     return {
       drawer: null,
+      snackbar: false,
       items: [{
         icon: 'trending-up',
         text: 'Most Popular'
@@ -2069,7 +2069,10 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {
     this.$vuetify.theme.dark = true;
-    this.snackbar = true;
+  },
+  mounted: function mounted() {
+    this.snackbar = localStorage.getItem('loggedIn') ? true : false;
+    localStorage.removeItem('loggedIn');
   },
   methods: {
     logout: function logout() {
@@ -2197,11 +2200,31 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      valid: true,
       email: '',
+      emailRules: [function (v) {
+        return !!v || 'E-mail is required';
+      }, function (v) {
+        return /.+@.+\..+/.test(v) || 'E-mail must be valid';
+      }],
       password: '',
+      passwordRules: [function (v) {
+        return !!v || 'Password is required';
+      }, function (v) {
+        return v && v.length >= 4 || 'Password must be upper than 4 characters';
+      }],
       loading: false,
       snackbar: false,
       text: ''
@@ -2234,6 +2257,7 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (res) {
         //console.dir(res);
         localStorage.setItem('token', res.data.token);
+        localStorage.setItem('loggedIn', true);
 
         _this.$router.push('/admin').then(function (res) {
           return console.log('LoggedIn Successfully');
@@ -20255,12 +20279,25 @@ var render = function() {
                               _vm._v(" "),
                               _c(
                                 "v-form",
+                                {
+                                  ref: "form",
+                                  attrs: { "lazy-validation": false },
+                                  model: {
+                                    value: _vm.valid,
+                                    callback: function($$v) {
+                                      _vm.valid = $$v
+                                    },
+                                    expression: "valid"
+                                  }
+                                },
                                 [
                                   _c("v-text-field", {
                                     attrs: {
                                       color: "error",
                                       label: "Login",
                                       name: "login",
+                                      rules: _vm.emailRules,
+                                      required: "",
                                       "prepend-icon": "mdi-account",
                                       type: "email"
                                     },
@@ -20278,7 +20315,10 @@ var render = function() {
                                       color: "error",
                                       id: "password",
                                       label: "Password",
+                                      counter: 4,
+                                      rules: _vm.passwordRules,
                                       name: "password",
+                                      required: "",
                                       "prepend-icon": "mdi-lock",
                                       type: "password"
                                     },
@@ -20305,7 +20345,10 @@ var render = function() {
                               _c(
                                 "v-btn",
                                 {
-                                  attrs: { color: "error" },
+                                  attrs: {
+                                    color: "error",
+                                    disabled: !_vm.valid
+                                  },
                                   on: { click: _vm.login }
                                 },
                                 [_vm._v("Login")]

@@ -31,11 +31,17 @@
 			        top
 			        color="white accent-4"
 			      ></v-progress-linear>
-                <v-form>
+                <v-form
+					ref="form"
+			        v-model="valid"
+			        :lazy-validation=false
+                >
                   <v-text-field color="error"
                     label="Login"
                     name="login"
                     v-model="email"
+                    :rules="emailRules"
+                    required
                     prepend-icon="mdi-account"
                     type="email"
                   ></v-text-field>
@@ -44,7 +50,10 @@
                     id="password"
                     label="Password"
                     v-model="password"
+                    :counter="4"
+                    :rules="passwordRules"
                     name="password"
+                    required
                     prepend-icon="mdi-lock"
                     type="password"
                   ></v-text-field>
@@ -52,7 +61,7 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="error" @click="login">Login</v-btn>
+                <v-btn color="error" :disabled="!valid" @click="login">Login</v-btn>
               </v-card-actions>
             </v-card>
             <v-snackbar
@@ -81,8 +90,17 @@
 	export default{
 		data(){
 			return{
+				valid: true,
 				email: '',
+				emailRules: [
+			        v => !!v || 'E-mail is required',
+			        v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+			    ],
 				password: '',
+				passwordRules: [
+			        v => !!v || 'Password is required',
+			        v => (v && v.length >= 4) || 'Password must be upper than 4 characters',
+			    ],
 				loading: false,
 				snackbar: false,
 				text: '',
@@ -111,6 +129,7 @@
 				.then(res => {
 					//console.dir(res);
 					localStorage.setItem('token',res.data.token)
+					localStorage.setItem('loggedIn', true)
 					this.$router.push('/admin')
 						.then(res => console.log('LoggedIn Successfully'))
 						.catch(res => console.log(err))
