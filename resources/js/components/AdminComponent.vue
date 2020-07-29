@@ -10,6 +10,7 @@
           v-for="item in items"
           :key="item.text"
           link
+          :to="item.action"
         >
           <v-list-item-action>
             <v-icon>mdi-{{ item.icon }}</v-icon>
@@ -20,7 +21,7 @@
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-subheader class="mt-4 grey--text text--darken-1">SUBSCRIPTIONS</v-subheader>
+        <v-subheader class="mt-4 grey--text text--darken-1">Top 5 Users</v-subheader>
         <v-list>
           <v-list-item
             v-for="item in items2"
@@ -61,15 +62,17 @@
       dense
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-btn text to ="/admin" left>
       <v-icon
         class="mx-4"
         large
       >
-        mdi-youtube
+        mdi-laravel
       </v-icon>
       <v-toolbar-title class="mr-12 align-center">
-        <span class="title">Youtube</span>
+        <span class="title">Laravue</span>
       </v-toolbar-title>
+      </v-btn>
       <v-spacer></v-spacer>
       <v-row
         align="center"
@@ -87,7 +90,8 @@
     </v-app-bar>
 
     <v-main>
-      <v-container class="fill-height">
+      <v-container class="">
+        <router-view></router-view>
         <v-row
           justify="center"
           align="center"
@@ -124,11 +128,11 @@
       drawer: null,
       snackbar: false,
       items: [
-        { icon: 'trending-up', text: 'Most Popular' },
-        { icon: 'youtube-subscription', text: 'Subscriptions' },
-        { icon: 'history', text: 'History' },
-        { icon: 'playlist-play', text: 'Playlists' },
-        { icon: 'clock', text: 'Watch Later' },
+        { icon: 'account', text: 'Users', action: '/admin/users' },
+        { icon: 'post-outline', text: 'Post', action: '/admin/post' },
+        { icon: 'circle-edit-outline', text: 'Pages', action: '/admin/pages' },
+        { icon: 'briefcase-edit-outline', text: 'Categories', action: '/admin/categories' },
+        { icon: 'clock', text: 'Roles', action: '/admin/roles' },
       ],
       items2: [
         { picture: 28, text: 'Joseph' },
@@ -158,3 +162,5 @@
   }
 </script>
 <style scoped></style>
+
+append-icon-cb
