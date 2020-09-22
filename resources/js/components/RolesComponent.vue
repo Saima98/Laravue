@@ -177,7 +177,7 @@
           text: '#',
           align: 'start',
           sortable: false,
-          value: 'name',
+          value: 'id',
         },
         { text: 'name', value: 'name' },
         { text: 'Created at', value: 'created_at' },
@@ -237,6 +237,11 @@
 	//fetch data
       axios.get('/api/roles',{})
       .then(res => this.roles = res.data.roles)
+      .catch(err => {
+      	if(err.response.status == 401)
+      		localStorage.removeItem('token');
+      		this.$router.push('/login');
+      	})
       },
       editItem (item) {
         this.editedIndex = this.roles.indexOf(item)

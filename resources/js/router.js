@@ -26,15 +26,21 @@ const routes = [
 			name: 'Roles'
 		},
 	],
-	beforeEnter: (to, from, next) => {
+	/*beforeEnter: (to, from, next) => {
         if(localStorage.getItem('token')){
         	next();
         }
         else{
 	        next('/login');
 	    }
-      }
+      }*/
 }
 ]
 
-export default new VueRouter({routes})
+const router = new VueRouter({routes})
+router.beforeEach((to, from, next) => {
+	const token = localStorage.getItem('token') || null
+ 	window.axios.defaults.headers['Authorization'] = "Bearer " + token;
+ 	next();
+})
+export default router

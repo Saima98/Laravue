@@ -2470,7 +2470,7 @@ __webpack_require__.r(__webpack_exports__);
         text: '#',
         align: 'start',
         sortable: false,
-        value: 'name'
+        value: 'id'
       }, {
         text: 'name',
         value: 'name'
@@ -2537,6 +2537,10 @@ __webpack_require__.r(__webpack_exports__);
 
       axios.get('/api/roles', {}).then(function (res) {
         return _this.roles = res.data.roles;
+      })["catch"](function (err) {
+        if (err.response.status == 401) localStorage.removeItem('token');
+
+        _this.$router.push('/login');
       });
     },
     editItem: function editItem(item) {
@@ -80353,18 +80357,26 @@ var routes = [{
     path: 'roles',
     component: _components_RolesComponent__WEBPACK_IMPORTED_MODULE_4__["default"],
     name: 'Roles'
-  }],
-  beforeEnter: function beforeEnter(to, from, next) {
-    if (localStorage.getItem('token')) {
-      next();
-    } else {
-      next('/login');
-    }
-  }
+  }]
+  /*beforeEnter: (to, from, next) => {
+         if(localStorage.getItem('token')){
+         	next();
+         }
+         else{
+          next('/login');
+      }
+       }*/
+
 }];
-/* harmony default export */ __webpack_exports__["default"] = (new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
+var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
   routes: routes
-}));
+});
+router.beforeEach(function (to, from, next) {
+  var token = localStorage.getItem('token') || null;
+  window.axios.defaults.headers['Authorization'] = "Bearer " + token;
+  next();
+});
+/* harmony default export */ __webpack_exports__["default"] = (router);
 
 /***/ }),
 
